@@ -7,8 +7,7 @@ base_router = APIRouter(
 )
 
 @base_router.get("/") # default route
-async def wolcome():
-    app_settings = get_settings()
+async def wolcome(app_settings=Depends(get_settings)):
 
     app_name = app_settings.APP_NAME
     app_version = app_settings.APP_VERSION
