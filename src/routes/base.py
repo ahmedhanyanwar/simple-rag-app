@@ -1,5 +1,5 @@
-from fastapi import FastAPI, APIRouter
-import os
+from fastapi import APIRouter, Depends
+from helpers.config import get_settings
 
 base_router = APIRouter(
     prefix="/api/v1",    # So now http://localhost:5000/api/v1/ 
@@ -8,8 +8,10 @@ base_router = APIRouter(
 
 @base_router.get("/") # default route
 async def wolcome():
-    app_name = os.getenv('APP_NAME')
-    app_version = os.getenv('APP_VERSION')
+    app_settings = get_settings()
+
+    app_name = app_settings.APP_NAME
+    app_version = app_settings.APP_VERSION
 
     return {
         "app_name": app_name,
