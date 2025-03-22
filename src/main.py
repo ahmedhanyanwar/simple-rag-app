@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from routes import base, data
+import motor
 
 app = FastAPI()
 
