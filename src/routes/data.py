@@ -130,6 +130,14 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
         )
 
     process_controller = ProcessController(project_id=project_id)
+    
+    chunk_model = await ChunkModel.create_instance(
+            db_client=request.app.db_client
+        )
+
+    if do_reset == 1:
+        no_deleted = await chunk_model.delete_chunks_by_project_id(project_id=project.id)
+
 
     no_records = 0
     no_files = 0
@@ -161,13 +169,6 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
             )
             for i, chunk in enumerate(file_chunks)
         ]
-
-        chunk_model = await ChunkModel.create_instance(
-            db_client=request.app.db_client
-        )
-
-        if do_reset == 1:
-            no_deleted = await chunk_model.delete_chunks_by_project_id(project_id=project.id)
 
         no_records += await chunk_model.insert_many_chunks(chunks= file_chunks_record)
         no_files += 1
