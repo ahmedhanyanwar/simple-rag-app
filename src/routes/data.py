@@ -121,7 +121,7 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
             for record in project_file
         ]
 
-    if len(project_file_ids == 0):
+    if len(project_file_ids) == 0:
         return JSONResponse(
             content={
                 "signal": ResponseSignal.NO_FILES_ERROR.value
@@ -145,6 +145,11 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
     for file_id in project_file_ids:
         file_content = process_controller.get_file_content(file_id=file_id)
         
+        # If file didn't exsit skip
+        if file_content is None:
+            logger.error(f"Error while processing file:{file_id}")
+            continue
+
         file_chunks = process_controller.process_file_content(
             file_content=file_content,
             file_id=file_id,
