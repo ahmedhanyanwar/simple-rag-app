@@ -117,7 +117,7 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
         )
 
         project_file_ids = [
-            record["asset_name"]
+            record.asset_name
             for record in project_file
         ]
 
@@ -171,6 +171,7 @@ async def process_endpoint(request: Request, project_id: str, process_request: P
                 chunk_metadata=chunk.metadata,
                 chunk_order=i + 1,
                 chunk_project_id=project.id,
+                chunk_asset_id=
             )
             for i, chunk in enumerate(file_chunks)
         ]
