@@ -49,7 +49,7 @@ class OpenAIProvider(LLMInterface):
             return None
         
         if not self.generate_model_id:
-            self.logger.error("generation model for OpenAI was not set.")
+            self.logger.error("Generation model for OpenAI was not set.")
             return None
         
         max_output_tokens = max_output_tokens if max_output_tokens else self.default_generation_max_output_tokens
