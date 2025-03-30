@@ -1,26 +1,19 @@
-from .LLMEnums import LLMEnums
-from .providers import OpenAIProvider, CoHereProvider
+from .VectorDBEnums import VectorDBEnums
+from .providers import QdrantDBProvider
+from controllers import BaseController
 
-class LLMProviderFactory:
+class VectorDBProviderFactory:
     def __init__(self, config: dict):
         self.config = config
+        self.base_controller = BaseController()
 
     def create(self, provider: str):
-        if provider == LLMEnums.OPENAI.value:
-            return OpenAIProvider(
-                api_key=self.config.OPENAI_API_KEY,
-                api_url=self.config.OPENAI_API_URL,
-                default_input_max_characters=self.config.INPUT_DEFAULT_MAX_CHARACTERS,
-                default_generation_max_output_tokens=self.config.GENERATION_DEFAULT_MAX_TOKENS,
-                default_generation_temperature=self.config.GENERATION_DEFAULT_TEMPERATURE
+        if provider == VectorDBEnums.QDRANT.value:
+            db_path = self.base_controller.get_database_path(db_name=self.config.VECTOR_DB_PATH)
+            return QdrantDBProvider(
+                db_path= db_path,
+                distance_method=self.config.VECTOR_DB_DIATANCE_METHOD
             )
-
-        if provider == LLMEnums.COHERE.value:
-            return CoHereProvider(
-                api_key=self.config.COHERE_API_KEY,
-                default_input_max_characters=self.config.INPUT_DEFAULT_MAX_CHARACTERS,
-                default_generation_max_output_tokens=self.config.GENERATION_DEFAULT_MAX_TOKENS,
-                default_generation_temperature=self.config.GENERATION_DEFAULT_TEMPERATURE
-            )
-        
+                
         return None
+    
