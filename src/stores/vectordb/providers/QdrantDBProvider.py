@@ -28,7 +28,7 @@ class QdrantDBProvider(VectorDBInterface):
     def is_collection_existed(self, collection_name: str) -> bool:
         return self.client.collection_exists(collection_name=collection_name)
     
-    def list_all_collection(self, collection_name: str) -> List:
+    def list_all_collection(self) -> List:
         return self.client.get_collections()
 
     def get_collection_info(self, collection_name: str) -> dict:
@@ -39,7 +39,8 @@ class QdrantDBProvider(VectorDBInterface):
             self.logger.info(f"Collection {collection_name} was deleted.")
             return self.client.delete_collection(collection_name=collection_name)
         self.logger.warning(f"Collection {collection_name} was not existed.")
-        
+        return None
+    
     def create_collection(self, collection_name: str,
                           embedding_size: int,
                           do_reset: bool=False):
@@ -71,6 +72,7 @@ class QdrantDBProvider(VectorDBInterface):
                 collection_name=collection_name,
                 records=[
                     models.Record(
+                        id=[record_id],
                         vector=vector,
                         payload={
                             "text": text,
@@ -93,6 +95,9 @@ class QdrantDBProvider(VectorDBInterface):
         # Beacause I want to Iterate over it
         if metadata is None:
             metadata = [None] * len(texts)
+        
+        if record_ids is None:
+            record_ids = list(range(0,len(texts)))
 
         if not self.is_collection_existed(collection_name=collection_name):
             self.logger.error(f"Can't insert new records to non-existed collection {collection_name}")
@@ -102,12 +107,14 @@ class QdrantDBProvider(VectorDBInterface):
         for i in range(0, len(texts), batch_size):
             batch_end = i + batch_size
 
+            batch_record_ids = record_ids[i:batch_end]
             batch_texts = texts[i:batch_end]
             batch_vectors = vectors[i:batch_end]
             batch_metadata = metadata[i:batch_end]
 
             batch_records = [
                 models.Record(
+                        id=batch_record_ids[x],
                         vector=batch_vectors[x],
                         payload={
                             "text": batch_texts[x],
