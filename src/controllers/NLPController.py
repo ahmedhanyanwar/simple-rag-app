@@ -8,7 +8,7 @@ from stores.llm.LLMEnums import DocumentTypeEnum
 class NLPController(BaseController):
     
     def __init__(self, vectordb_client, generation_client,
-                embedding_client, template_parser=None):
+                embedding_client, template_parser):
         super().__init__()
 
         self.vectordb_client = vectordb_client

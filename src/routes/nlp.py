@@ -34,7 +34,8 @@ async def get_project_index_info(request: Request, project_id: str, push_request
     nlp_controller = NLPController(
         vectordb_client=request.app.vectordb_client,
         generation_client=request.app.generation_client,
-        embedding_client=request.app.embedding_client
+        embedding_client=request.app.embedding_client,
+        template_parser=request.app.template_parse,
     )
 
     chunk_model = await ChunkModel.create_instance(db_client=request.app.db_client)
@@ -102,7 +103,8 @@ async def search_index(request: Request, project_id: str):
     nlp_controller = NLPController(
         vectordb_client=request.app.vectordb_client,
         generation_client=request.app.generation_client,
-        embedding_client=request.app.embedding_client
+        embedding_client=request.app.embedding_client,
+        template_parser=request.app.template_parser,
     )
 
     collection_info = nlp_controller.get_vector_collection_info(
