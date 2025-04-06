@@ -4,6 +4,7 @@ from typing import List
 
 from ..VectorDBInterface import VectorDBInterface
 from ..VectorDBEnums import DistanceMethodEnums
+from models.db_schemes import RetrievedDocument
 
 class QdrantDBProvider(VectorDBInterface):
     def __init__(self, db_path: str, distance_method: str):
@@ -136,10 +137,21 @@ class QdrantDBProvider(VectorDBInterface):
         self.logger.info(f"All records was inserted to collection {collection_name}")
         return True
 
-    def search_by_vector(self, collection_name: str, vector: list ,limit: int=5):
-        return self.client.search(
+    def search_by_vector(self, collection_name: str, vector: list ,limit: int=5) -> List[RetrievedDocument]:
+        results = self.client.search(
             collection_name=collection_name,
             query_vector=vector,
             limit=limit 
         )
+
+        if not results or len(results)==0:
+            return None
+        
+        return [
+            RetrievedDocument(**{
+                "score": result.score,
+                "text": result.payload["text"]
+            })
+            for result in results
+        ]
     
