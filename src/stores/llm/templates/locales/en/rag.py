@@ -28,6 +28,9 @@ document_prompt = Template(   # When I call it I will pass doc_num, chunk_text
 footer_prompt = Template(   
     "\n".join([
         "Based only on the above documents, please generate an answer for the user.",
+        "## Question:",
+        "$query",
+        "",
         "## Answer:",
     ])
 )
