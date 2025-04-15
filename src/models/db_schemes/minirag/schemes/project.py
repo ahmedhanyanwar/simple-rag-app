@@ -28,4 +28,5 @@ class Project(SQLAlchemyBase):
         DateTime(timezone=True),
         onupdate=func.now(), # To put time directly when instance upated
         nullable=True, # At creation it equal null
-    ) 
+    )
+    
