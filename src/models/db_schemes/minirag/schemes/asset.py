@@ -38,7 +38,8 @@ class Asset(SQLAlchemyBase):
     # The 'back_populates="assets"' tells SQLAlchemy that the Project model has an 'assets' relationship
     # that refers back to all Asset instances linked to it.
     project = relationship("Project", back_populates="assets")
-
+    chunks = relationship("DataChunk", back_populates="asset")
+    
     # Adding indexes to improve query performance:
     # - 'ix_assert_project_id': Indexes 'asset_project_id', which is a foreign key to 'projects.project_id'.
     #    This significantly speeds up queries that filter or join by project, such as:

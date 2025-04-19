@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, DateTime # Types
 from sqlalchemy import func
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 import uuid
 
 from .minirag_base import SQLAlchemyBase
@@ -30,3 +31,5 @@ class Project(SQLAlchemyBase):
         nullable=True, # At creation it equal null
     )
     
+    assets = relationship("Asset", back_populates="project")
+    chunks = relationship("DataChunk", back_populates="project")

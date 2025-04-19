@@ -17,5 +17,5 @@ $ alembic revision --autogenerate -m "Add ..."
 ### Upgrade the database
 
 ```bash
-$ alembic downgrade head
+$ alembic upgrade head
 ```
